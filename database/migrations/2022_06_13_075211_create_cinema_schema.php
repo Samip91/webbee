@@ -37,7 +37,76 @@ class CreateCinemaSchema extends Migration
      */
     public function up()
     {
-        throw new \Exception('implement in coding task 4, you can ignore this exception if you are just running the initial migrations.');
+        Schema::create('cities', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('cinemas', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('city_id');
+            $table->string('row_name_prefix');
+            $table->string('row_name_direction');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('films', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('seat_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->double('price_to_base_percantage');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('seats', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cinema_id');
+            $table->foreignId('seat_type_id');
+            $table->integer('no_of_seats');
+            $table->integer('no_of_rows');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('shows', function (Blueprint $table) {
+            $table->id();
+            $table->time('time');
+            $table->foreignId('cinema_id');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('film_shows', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('film_id');
+            $table->foreignId('show_id');
+            $table->double('base_price');
+            $table->date('date');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('booking', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('film_show_id');
+            $table->foreignId('seat_id');
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**
